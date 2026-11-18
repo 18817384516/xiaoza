@@ -1,0 +1,32 @@
+{
+  "id": "c16889bdf7d74e671ec12d8a373ec1dc",
+  "name": "牛油果迷你椅",
+  "created_at": 1795046400.0,
+  "recipe": {
+    "kind": "blender",
+    "category": "generative",
+    "name": "牛油果迷你椅",
+    "prompt": "一把牛油果造型的迷你椅子，高70毫米。椅背像半个牛油果的切面，有圆润的外壳和浅凹果肉，靠背中间有凸起的果核靠垫。座面可坐，四条短腿与座面连接，椅背连接座面，所有部件为一个可打印实体。不要额外的大底板。",
+    "params": {
+      "height": 70.0
+    },
+    "code": "import bpy\nimport bmesh\nimport math\n\n\ndef activate(obj):\n    bpy.ops.object.select_all(action='DESELECT')\n    obj.select_set(True)\n    bpy.context.view_layer.objects.active = obj\n\n\ndef material(name, color):\n    mat = bpy.data.materials.new(name)\n    mat.diffuse_color = color\n    return mat\n\n\ndef mesh_object(name, verts, faces):\n    mesh = bpy.data.meshes.new(name + 'Mesh')\n    mesh.from_pydata(verts, [], faces)\n    mesh.update()\n    bm = bmesh.new()\n    bm.from_mesh(mesh)\n    bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))\n    bm.to_mesh(mesh)\n    bm.free()\n    obj = bpy.data.objects.new(name, mesh)\n    bpy.context.collection.objects.link(obj)\n    return obj\n\n\ndef bevel(obj, width, segments=4):\n    activate(obj)\n    mod = obj.modifiers.new('Soft edges', 'BEVEL')\n    mod.width = width\n    mod.segments = segments\n    bpy.ops.object.modifier_apply(modifier=mod.name)\n\n\ndef unite(target, addition):\n    activate(target)\n    mod = target.modifiers.new('Solid connection', 'BOOLEAN')\n    mod.operation = 'UNION'\n    mod.solver = 'EXACT'\n    mod.object = addition\n    bpy.ops.object.modifier_apply(modifier=mod.name)\n    bpy.data.objects.remove(addition, do_unlink=True)\n\n\ndef make_back(skin, flesh, border):\n    n = 96\n    # Each ring follows a pear-shaped silhouette in the XZ plane.\n    # Front faces -Y; its recessed center is farther toward +Y.\n    rings = [\n        (0.20, 14.30),\n        (0.43, 13.95),\n        (0.65, 12.95),\n        (0.81, 11.35),\n        (0.88, 10.45),\n        (0.94, 10.15),\n        (0.982, 11.35),\n        (1.0, 14.10),\n        (0.991, 17.80),\n        (0.95, 20.50),\n        (0.79, 22.10),\n        (0.48, 22.75),\n        (0.20, 23.0)\n    ]\n    verts = [(0, 14.4, 46)]\n    for r, y in rings:\n        for i in range(n):\n            t = 2 * math.pi * i / n\n            x = r * 22 * math.sin(t) * (1 - 0.18 * math.cos(t))\n            z = 46 + r * 24 * math.cos(t)\n            verts.append((x, y, z))\n    faces = []\n    indices = []\n    for i in range(n):\n        faces.append((0, 1 + i, 1 + (i + 1) % n))\n        indices.append(1)\n    for j in range(len(rings) - 1):\n        a = 1 + j * n\n        b = a + n\n        for i in range(n):\n            k = (i + 1) % n\n            faces.append((a + i, b + i, b + k, a + k))\n            indices.append(1 if j < 4 else (2 if j == 4 else 0))\n    center = len(verts)\n    verts.append((0, 23.1, 46))\n    start = 1 + (len(rings) - 1) * n\n    for i in range(n):\n        faces.append((start + i, center, start + (i + 1) % n))\n        indices.append(0)\n    obj = mesh_object('Pear shaped avocado back', verts, faces)\n    for mat in (skin, flesh, border):\n        obj.data.materials.append(mat)\n    for poly, index in zip(obj.data.polygons, indices):\n        poly.material_index = index\n        poly.use_smooth = True\n    return obj\n\n\ndef make_leg(xsign, front, mat):\n    bottom_x = xsign * 17.4\n    top_x = xsign * 14.6\n    bottom_y = -16.5 if front else 12.6\n    top_y = -13.2 if front else 10.1\n    n = 40\n    verts = []\n    # Horizontal rings give four genuinely flat contacts at Z=0.\n    profiles = [(0.0, 2.75), (0.65, 3.12), (23.2, 4.0), (26.0, 4.05)]\n    for z, radius in profiles:\n        t = z / 26.0\n        cx = bottom_x + (top_x - bottom_x) * t\n        cy = bottom_y + (top_y - bottom_y) * t\n        for i in range(n):\n            a = 2 * math.pi * i / n\n            verts.append((cx + radius * math.cos(a), cy + radius * math.sin(a), z))\n    faces = [tuple(reversed(range(n)))]\n    for j in range(len(profiles) - 1):\n        for i in range(n):\n            k = (i + 1) % n\n            faces.append((j*n+i, j*n+k, (j+1)*n+k, (j+1)*n+i))\n    faces.append(tuple((len(profiles)-1)*n+i for i in range(n)))\n    obj = mesh_object('Splayed short leg', verts, faces)\n    obj.data.materials.append(mat)\n    for poly in obj.data.polygons:\n        poly.use_smooth = len(poly.vertices) == 4\n    return obj\n\n\ndef create_model():\n    skin = material('Deep avocado peel', (0.115, 0.255, 0.055, 1))\n    flesh = material('Avocado flesh', (0.72, 0.84, 0.28, 1))\n    border = material('Fresh green rim', (0.36, 0.58, 0.10, 1))\n    brown = material('Warm brown stone', (0.34, 0.135, 0.055, 1))\n\n    back = make_back(skin, flesh, border)\n\n    # An eight-millimeter thick seat has a usable flat upper surface.\n    bpy.ops.mesh.primitive_cube_add(size=1, location=(0, -2.5, 25))\n    seat = bpy.context.object\n    seat.name = 'Rounded usable seat'\n    seat.dimensions = (44, 39, 8)\n    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)\n    bevel(seat, 3.5, 6)\n    seat.data.materials.append(flesh)\n    for poly in seat.data.polygons:\n        poly.use_smooth = poly.area < 80\n    unite(back, seat)\n\n    for sign in (-1, 1):\n        for front in (True, False):\n            leg = make_leg(sign, front, skin)\n            unite(back, leg)\n\n    # A substantial buried rear portion bonds the pit to the concave flesh.\n    bpy.ops.mesh.primitive_uv_sphere_add(segments=48, ring_count=32, location=(0, 10.25, 45))\n    pit = bpy.context.object\n    pit.name = 'Raised avocado stone cushion'\n    pit.scale = (9.8, 5.8, 11.6)\n    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)\n    pit.data.materials.append(brown)\n    for poly in pit.data.polygons:\n        poly.use_smooth = True\n    unite(back, pit)\n\n    back.name = 'Avocado chair 70mm single solid'\n    bm = bmesh.new()\n    bm.from_mesh(back.data)\n    bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))\n    bm.to_mesh(back.data)\n    bm.free()\n    back.data.update()\n    activate(back)\n    return [back]\n",
+    "summary": "总高70毫米，无额外底板。梨形椅背具有圆润果皮、浅凹果肉和凸起果核靠垫；圆角平座面连接四条略外撇的短腿。所有部件通过实体布尔合并为一个可打印实体，四脚底面位于同一平面。",
+    "generator": "LLM + local Blender"
+  },
+  "stats": {
+    "dimensions": [
+      44.67,
+      45.1,
+      70.0
+    ],
+    "volume_cm3": 33.348,
+    "triangles": 6756,
+    "watertight": true,
+    "components": 1,
+    "units": "mm",
+    "warnings": [
+      "公开演示示例，尚未进行实物打印、壁厚和承载验证。"
+    ]
+  }
+}

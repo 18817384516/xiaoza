@@ -1,0 +1,35 @@
+{
+  "id": "322e2724ccab068cc5a3e8e335789435",
+  "name": "L 型安装支架",
+  "created_at": 1795046400.0,
+  "recipe": {
+    "kind": "bracket",
+    "category": "part",
+    "name": "L 型安装支架",
+    "params": {
+      "width": 50.0,
+      "depth": 40.0,
+      "height": 40.0,
+      "thickness": 4.0,
+      "hole_diameter": 5.0,
+      "holes": 4,
+      "tolerance": 0.2
+    },
+    "prompt": "L型支架，宽50毫米，深40毫米，高40毫米，厚4毫米，4个孔，孔径5毫米"
+  },
+  "stats": {
+    "dimensions": [
+      50.0,
+      40.0,
+      40.0
+    ],
+    "volume_cm3": 14.861,
+    "triangles": 1064,
+    "watertight": true,
+    "components": 1,
+    "units": "mm",
+    "warnings": [
+      "公开演示示例，尚未进行实物打印、壁厚和承载验证。"
+    ]
+  }
+}

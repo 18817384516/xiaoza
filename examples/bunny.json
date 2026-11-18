@@ -1,0 +1,33 @@
+{
+  "id": "fe5e44e4e1b1ac83d4accd7f9a984008",
+  "name": "治愈系小兔",
+  "created_at": 1795046400.0,
+  "recipe": {
+    "kind": "bunny",
+    "category": "figurine",
+    "name": "治愈系小兔",
+    "params": {
+      "height": 65.0,
+      "ear_scale": 1.15,
+      "head_scale": 1,
+      "belly_scale": 1,
+      "base": true
+    },
+    "prompt": "一只圆滚滚的小兔，耳朵长一点，带底座，高65毫米"
+  },
+  "stats": {
+    "dimensions": [
+      39.97,
+      39.97,
+      65.0
+    ],
+    "volume_cm3": 19.252,
+    "triangles": 28218,
+    "watertight": true,
+    "components": 1,
+    "units": "mm",
+    "warnings": [
+      "公开演示示例，尚未进行实物打印、壁厚和承载验证。"
+    ]
+  }
+}

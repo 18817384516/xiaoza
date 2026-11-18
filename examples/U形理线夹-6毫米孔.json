@@ -1,0 +1,32 @@
+{
+  "id": "9c82549da4c31eadb76183bcdcd0ef36",
+  "name": "U形双孔理线夹",
+  "created_at": 1795046400.0,
+  "recipe": {
+    "kind": "blender",
+    "category": "generative",
+    "name": "U形双孔理线夹",
+    "prompt": "一个U形理线夹，总宽36毫米，深20毫米，总高28毫米，壁厚3毫米。U形沿宽度方向展开，上方开口，两侧立墙与底板相连。底板上两个直径4毫米的竖直通孔，沿宽度方向布置，孔中心距18毫米。边缘圆角1毫米，所有部分一体连接，不需要额外底座。",
+    "params": {
+      "height": 28.0
+    },
+    "code": "import bpy\nimport bmesh\nimport math\n\n\ndef activate(obj):\n    bpy.ops.object.select_all(action='DESELECT')\n    obj.select_set(True)\n    bpy.context.view_layer.objects.active = obj\n\n\ndef create_model():\n    # Coordinates in millimeters: X width, Y depth, Z height.\n    # Extrude a single U-shaped profile, not three touching boxes.\n    profile = [(-18.0, 0.0), (18.0, 0.0),\n               (18.0, 28.0), (15.0, 28.0),\n               (15.0, 3.0), (-15.0, 3.0),\n               (-15.0, 28.0), (-18.0, 28.0)]\n    vertices = [(x, y, z) for y in (-10.0, 10.0) for x, z in profile]\n    n = len(profile)\n    faces = [tuple(range(n - 1, -1, -1)), tuple(range(n, 2 * n))]\n    for i in range(n):\n        j = (i + 1) % n\n        faces.append((i, j, j + n, i + n))\n\n    mesh = bpy.data.meshes.new('U_Profile_Solid')\n    mesh.from_pydata(vertices, [], faces)\n    mesh.update()\n    bm = bmesh.new()\n    bm.from_mesh(mesh)\n    bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))\n    bm.to_mesh(mesh)\n    bm.free()\n    body = bpy.data.objects.new('U形理线夹_36x20x28mm', mesh)\n    bpy.context.collection.objects.link(body)\n    activate(body)\n    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)\n\n    # True through holes, diameter 6 mm and center spacing 18 mm.\n    for x in (-9.0, 9.0):\n        bpy.ops.mesh.primitive_cylinder_add(vertices=48, radius=3.0, depth=9.0,\n                                           end_fill_type='NGON', location=(x, 0.0, 1.5))\n        cutter = bpy.context.object\n        cutter.name = 'Through_Hole_Cutter'\n        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)\n        activate(body)\n        boolean = body.modifiers.new('Diameter_6_Through_Hole', 'BOOLEAN')\n        boolean.operation = 'DIFFERENCE'\n        boolean.solver = 'EXACT'\n        boolean.object = cutter\n        bpy.ops.object.modifier_apply(modifier=boolean.name)\n        bpy.data.objects.remove(cutter, do_unlink=True)\n\n    # Round the exposed boundaries and both hole mouths, preserving the bore.\n    activate(body)\n    bevel = body.modifiers.new('Radius_1mm', 'BEVEL')\n    bevel.width = 1.0\n    bevel.segments = 5\n    bevel.limit_method = 'ANGLE'\n    bevel.angle_limit = math.radians(30.0)\n    bevel.affect = 'EDGES'\n    bevel.use_clamp_overlap = True\n    bpy.ops.object.modifier_apply(modifier=bevel.name)\n\n    bm = bmesh.new()\n    bm.from_mesh(body.data)\n    bmesh.ops.recalc_face_normals(bm, faces=list(bm.faces))\n    bm.to_mesh(body.data)\n    bm.free()\n    body.data.update()\n    # Keep broad mechanical planes flat; smooth the rounded strips.\n    for face in body.data.polygons:\n        face.use_smooth = face.area < 5.0\n\n    material = bpy.data.materials.new('深蓝工程塑料')\n    material.diffuse_color = (0.08, 0.23, 0.36, 1.0)\n    body.data.materials.append(material)\n    activate(body)\n    return [body]\n",
+    "summary": "保持原有U形一体结构及36×20×28毫米外形，底板与侧墙厚3毫米，边缘圆角1毫米。仅将底板两处竖直通孔的孔径改为6毫米，孔中心距仍为18毫米；孔口圆滑过渡，孔内保留直径6毫米的直通段，无额外底座。",
+    "generator": "LLM + local Blender"
+  },
+  "stats": {
+    "dimensions": [
+      36.0,
+      20.0,
+      28.0
+    ],
+    "volume_cm3": 4.868,
+    "triangles": 3172,
+    "watertight": true,
+    "components": 1,
+    "units": "mm",
+    "warnings": [
+      "公开演示示例，尚未进行实物打印、壁厚和承载验证。"
+    ]
+  }
+}

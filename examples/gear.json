@@ -1,0 +1,33 @@
+{
+  "id": "5456d8088145ab7cdfe83b8e04a622b1",
+  "name": "直齿轮",
+  "created_at": 1795046400.0,
+  "recipe": {
+    "kind": "gear",
+    "category": "part",
+    "name": "直齿轮",
+    "params": {
+      "width": 40.0,
+      "height": 8.0,
+      "hole_diameter": 6.0,
+      "teeth": 20,
+      "tolerance": 0.2
+    },
+    "prompt": "一个直齿轮，外径40毫米，厚8毫米，20齿，孔径6毫米"
+  },
+  "stats": {
+    "dimensions": [
+      39.98,
+      39.98,
+      8.0
+    ],
+    "volume_cm3": 7.858,
+    "triangles": 1616,
+    "watertight": true,
+    "components": 1,
+    "units": "mm",
+    "warnings": [
+      "公开演示示例，尚未进行实物打印、壁厚和承载验证。"
+    ]
+  }
+}

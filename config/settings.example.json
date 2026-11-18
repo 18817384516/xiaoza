@@ -1,0 +1,8 @@
+{
+  "enabled": false,
+  "base_url": "https://api.example.com/v1",
+  "model": "your-vision-capable-model",
+  "api_key": "",
+  "meshy_api_key": "",
+  "meshy_texture": true
+}

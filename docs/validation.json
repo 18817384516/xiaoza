@@ -1,0 +1,24 @@
+{
+  "release": "0.1.0",
+  "verified_on": "2026-11-19",
+  "platform": "Windows x64",
+  "environment": "Fresh virtual environment and npm installation from the public source copy",
+  "python": "3.13",
+  "dependency_installation": "passed",
+  "typescript_and_production_build": "passed_with_chunk_size_notice",
+  "backend_tests": { "passed": 112, "skipped": 0 },
+  "browser_tests": { "passed": 15, "skipped": 0 },
+  "blender": "4.5.16, using an explicitly configured external installation",
+  "real_paid_generation_in_verification": false,
+  "personal_settings_or_model_library_in_test_server": false,
+  "public_archive_audit": "passed",
+  "github_hosted_ci_run": false,
+  "npm_audit": {
+    "high_entries": 4,
+    "root_advisory": "GHSA-fc5q-39xc-vjpf",
+    "github_advisory_state_at_check": "withdrawn",
+    "zero_vulnerability_claim": false
+  },
+  "real_meshy_quality_validated": false,
+  "physical_print_validated": false
+}

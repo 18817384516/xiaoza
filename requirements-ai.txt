@@ -1,0 +1,13 @@
+# Optional local neural generation runtime. Install torch + torchvision from the CPU index first.
+torch
+torchvision
+filelock
+PyYAML
+requests
+tqdm
+blobfile
+ftfy
+regex
+transformers>=4.45,<5
+sentencepiece
+sacremoses

@@ -1,0 +1,31 @@
+{
+  "id": "2bc3356ac32f35ad5eb4ad9a8f17ecef",
+  "name": "桌面花瓶",
+  "created_at": 1795046400.0,
+  "recipe": {
+    "kind": "vase",
+    "category": "part",
+    "name": "桌面花瓶",
+    "params": {
+      "width": 46.0,
+      "height": 70.0,
+      "thickness": 2.4
+    },
+    "prompt": "一个桌面花瓶，外径46毫米，高70毫米，壁厚2.4毫米"
+  },
+  "stats": {
+    "dimensions": [
+      46.0,
+      46.0,
+      70.0
+    ],
+    "volume_cm3": 20.612,
+    "triangles": 1920,
+    "watertight": true,
+    "components": 1,
+    "units": "mm",
+    "warnings": [
+      "公开演示示例，尚未进行实物打印、壁厚和承载验证。"
+    ]
+  }
+}

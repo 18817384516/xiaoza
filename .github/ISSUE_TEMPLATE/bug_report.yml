@@ -1,0 +1,46 @@
+name: 问题反馈 / Bug report
+description: 报告可复现的生成、界面、安装或导出问题
+title: "[Bug] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: 请勿上传密钥、data/settings.json、私人图片和完整运行目录。安全漏洞按SECURITY.md私下报告。
+  - type: textarea
+    id: environment
+    attributes:
+      label: 运行环境
+      description: 项目版本、系统、Python、Node、Blender和浏览器版本
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: 出现问题的流程
+      options:
+        - 安装 / 启动
+        - AI + Blender
+        - 专业形象 Meshy
+        - 本地基础部件
+        - 界面 / 草图 / 作品库
+        - 打印 / 文件导出
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤与最小描述
+      description: 按顺序说明操作，尽量提供可公开的最小输入
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期与实际结果
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 错误信息或截图
+      description: 请先遮盖个人路径、服务账户、密钥和私人内容

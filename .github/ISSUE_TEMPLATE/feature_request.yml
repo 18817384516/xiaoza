@@ -1,0 +1,26 @@
+name: 功能建议 / Feature request
+description: 描述你想完成的任务和当前障碍
+title: "[Feature] "
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: 你希望完成什么
+      description: 请给出具体使用场景
+    validations:
+      required: true
+  - type: textarea
+    id: obstacle
+    attributes:
+      label: 当前遇到的障碍
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: 建议与可接受的替代方案
+  - type: textarea
+    id: sample
+    attributes:
+      label: 可公开的示例
+      description: 上传前确认有权分享，不要包含密钥或私人信息

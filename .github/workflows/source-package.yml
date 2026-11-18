@@ -1,0 +1,25 @@
+name: Prepare public source archive
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python tools/package_open_source.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: xiaozao-public-source
+          path: |
+            artifacts/xiaozao-open-source-v*.zip
+            artifacts/xiaozao-open-source-v*.sha256
+          retention-days: 30
