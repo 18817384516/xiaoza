@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: '3.13'
       - run: python tools/package_open_source.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: xiaozao-public-source
           path: |
